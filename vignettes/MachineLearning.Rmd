@@ -1,0 +1,120 @@
+---
+title: "Machine Learning"
+date: "`r Sys.Date()`"
+author: "John James jjames@datasciencesalon.org"
+output:
+  rmdformats::readthedown:
+    highlight: kate
+  keep_md: true
+bibliography: Machine Learning.bib
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# What is Machine Learning
+
+Several definitions have emerged; however, two definitions are well cited in literature.
+
+> Machine Learning: Field of study that gives computers the ability to learn without being explicitly programmed. [@Samuel1959]
+
+Another well-cited definition was posited by Tom Mitchell (1997)
+
+> Well-posed Learning Problem: A computer program is said to *learn* from experience E with respect to some task T and some performance measure P, if its performance on task T, as measured by P, improves with experience E. [@mitchell1997machine]
+
+# Machine Learning Algorithms
+
+## Supervised Learning 
+
+>Supervised learning is the machine learning task of inferring a function from labeled training data.[1] The training data consist of a set of training examples. In supervised learning, each example is a pair consisting of an input object (typically a vector) and a desired output value (also called the supervisory signal). A supervised learning algorithm analyzes the training data and produces an inferred function, which can be used for mapping new examples. An optimal scenario will allow for the algorithm to correctly determine the class labels for unseen instances. This requires the learning algorithm to generalize from the training data to unseen situations in a "reasonable" way. [@wiki:supervisedlearning]
+
+## Unsupervised Learning
+
+> Unsupervised learning studies how systems can learn to represent particular input patterns in a way that reflects the statistical structure of the overall collection of input patterns. By contrast with SUPERVISED LEARNING or REINFORCEMENT LEARNING, there are no explicit target outputs or environmental evaluations associated with each input; rather the unsupervised learner brings to bear prior biases as to what aspects of the structure of the input should be captured in the output. [@Dayan1999]
+
+Cluster analysis is the most common unsupervised learning method used for exploratory data analysis to find hidden patterns or grouping in data. The clusters are modeled using a measure of similarity which is defined upon metrics such as Euclidean or probabilistic distance.
+
+Common clustering algorithms include[@matlab]:
+
+* Hierarchical clustering: builds a multilevel hierarchy of clusters by creating a cluster tree
+* k-Means clustering: partitions data into k distinct clusters based on distance to the centroid of a cluster
+* Gaussian mixture models: models clusters as a mixture of multivariate normal density components
+* Self-organizing maps: uses neural networks that learn the topology and distribution of the data
+* Hidden Markov models: uses observed data to recover the sequence of states
+
+# Supervised Learning
+
+## Linear Regression with One Variable
+
+### Cost Function
+We can measure the accuracy of a hypothesis function by using a **cost function**.  This takes an average difference of all the results of the hypothesis with inputs from x's and the actual output y's.
+
+$$J(\theta_{0},\theta_{1}) = \frac{1}{2m}\displaystyle\sum_{i=1}^{m}(h_{\theta}(x_i) - y_i)^2$$
+This function is otherwise called the "Squared error function", or "Mean squared error".  The mean is halved $(\frac{1}{2})$ as a convenience for the computation of the gradient descent, as the derivative term of the square function will cancel out the $(\frac{1}{2})$ term.
+
+The objective is to choose $\theta_{0}, \theta_{1}$, such that the cost function is minimized. e.g.
+$$minimize \theta_{0}, \theta_{1} J(\theta_{0},\theta_{1})$$
+
+### Gradient Descent 
+$$\theta_{j} := \theta_{j} - \alpha\frac{\mathrm d}{\mathrm d \theta_{j}}J(\theta_{0}, \theta{1})$$
+where
+j = 0, 1 represents the feature index number.
+
+Simultanous Update:
+
+$temp0 := \theta_{j} - \alpha\frac{\mathrm d}{\mathrm d \theta_{0}}J(\theta_{0}, \theta{1})$
+
+$temp1 := \theta_{j} - \alpha\frac{\mathrm d}{\mathrm d \theta_{1}}J(\theta_{0}, \theta{1})$
+
+$\theta_{0} := temp0$
+
+$\theta_{1} := temp1$
+
+#### Gradient Descent for Linear Regression
+repeat until convergence: {
+
+$\theta_{0} :=\theta_{0} - \alpha\frac{1}{m}\displaystyle\sum_{i=1}^{m}(h_{\theta}(x_i) - y_i)$
+
+$\theta_{1} :=\theta_{1} - \alpha\frac{1}{m}\displaystyle\sum_{i=1}^{m}(h_{\theta}(x_i) - y_i)x_{i}$
+}
+
+## Multivariate Linear Regression
+Notation: 
+
+* $x_{j}^{(i)}$ = value of feature $j$ in the $i^{th}$ training example
+* $x^{(i)}$  = the input (features) of the $i^{th}$ training example
+* $m$ = the number of training examples
+* $n$ = the number of features
+
+The multivariate form of the hypothesis function accommodating these multiple features is as follows:
+$h_{\theta}(x) = \theta_{0} + \theta_{1}x_{1} + \theta_{2}x_{2} + ... \theta_{n}x_{n}$
+
+Using matrix multiplication, the multivariate hypothesis function can be represented as:
+$h_{\theta}(x) = \theta^{T}x$
+
+where $x_{0}^{(i)} = 1$
+
+###  Gradient Descent for Multiple Variables
+repeat until convergence: {
+
+$\theta_{0} :=\theta_{0} - \alpha\frac{1}{m}\displaystyle\sum_{i=1}^{m}(h_{\theta}(x^{(i)}) - y^{(i)})x_{0}^{(i)}$
+
+$\theta_{1} :=\theta_{1} - \alpha\frac{1}{m}\displaystyle\sum_{i=1}^{m}(h_{\theta}(x^{(i)}) - y^{(i)})x_{1}^{(i)}$
+
+$\theta_{2} :=\theta_{2} - \alpha\frac{1}{m}\displaystyle\sum_{i=1}^{m}(h_{\theta}(x^{(i)}) - y^{(i)})x_{2}^{(i)}$
+...
+}
+
+In other words:
+repeat until convergence: {
+
+$\theta_{j} :=\theta_{j} - \alpha\frac{1}{m}\displaystyle\sum_{i=1}^{m}(h_{\theta}(x^{(i)}) - y^{(i)})x_{j}^{(i)}$ for j := 0...n
+
+}
+
+#### Gradient Descent - Feature Scaling
+We can speed up gradient descent by having each of our input values in roughly the same range.  This is because $\theta$ will descend quickly on small ranges and slowly on large ranges, and so will oscillate inefficiently down to teh optimum when the variables are very uneven.
+
+
+# References

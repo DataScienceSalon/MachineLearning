@@ -1,0 +1,73 @@
+---
+title: "Machine Learning"
+date: "`r Sys.Date()`"
+author: "John James jjames@datasciencesalon.org"
+output: github_document
+bibliography: Machine Learning.bib
+---
+
+```{r knitr_init, echo=FALSE, cache=FALSE}
+library(knitr)
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+	             cache=TRUE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+
+## What is Machine Learning
+
+Several definitions have emerged; however, two definitions are well cited in literature.
+
+> Machine Learning: Field of study that gives computers the ability to learn without being explicitly programmed. [@Samuel1959]
+
+Another well-cited definition was posited by Tom Mitchell (1997)
+
+> Well-posed Learning Problem: A computer program is said to *learn* from experience E with respect to some task T and some performance measure P, if its performance on task T, as measured by P, improves with experience E. [@mitchell1997machine]
+
+## Machine Learning Sources
+This repository compiles notes and the key machine learning ideas from readings such as:
+
+* The Elements of Statistical Learning [@hastie01statisticallearning]
+* Machine Learning [@mitchell1997machine]
+
+And online courses such as:
+
+* Machine Learning by Stanford University [@Ng]
+* Machine Learning Specialization by University of Washington [@UniversityofWash]
+* Practical Machine Learning | Data Science Specialization by Johns Hopkins University [@Leek]
+* Learning from Data [@Data2007]
+
+## Document Organization
+
+The document is organized in three sections:
+
+1. Machine Learning Concepts, Techniques and Algorithms
+2. Machine Learning with R
+3. Machine Learning with Python
+
+### Section 1: Machine Learning Concepts, Techniques and Algorithms
+
+This introductory section gives an overview of many concepts, techniques, and algorithms in machine learning, beginning with topics such as classification and linear regression and ending up with more advanced topics such as neural networks, support vector machines, dimensionality reduction, anomaly detection, recommender systems, and large scale machine learning. The topics are:
+
+1. Linear Regression with One Variable
+2. Multivariate Linear Regression
+3. Logistic Regression
+4. Neural Networks Learning System Design
+5. Support Vector Machines
+6. Unsupervised Learning
+7. Dimensionality Reduction
+8. Anomaly Detection
+9. Recommender Systems
+10. Large Scale Machine Learning
+
+### Section 2: Machine Learning with R
+
+This section summarizes the ideas from Practical Machine Learning | Data Science Specialization by Johns Hopkins University [@Leek].
+
+## References
