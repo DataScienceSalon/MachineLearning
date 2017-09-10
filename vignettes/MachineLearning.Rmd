@@ -5,17 +5,34 @@ author: "John James jjames@datasciencesalon.org"
 output:
   rmdformats::readthedown:
     highlight: kate
-  keep_md: true
 bibliography: Machine Learning.bib
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Machine Learning}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-# What is Machine Learning
+```{r knitr_init, echo=FALSE, cache=FALSE}
+library(knitr)
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+	             cache=TRUE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
 
-Several definitions have emerged; however, two definitions are well cited in literature.
+
+# Preface
+As I tackle the topic of machine learning, I hereby commit to this writing in order to capture key learnings and concepts with hopes of retaining a reasonable aspect of the content I encounter. No warranties are made to the completeness, coherence, or accuracy of these notes.  I'm somewhat impatient with preamble and like to get to the point, so forgive short-hand, brevity, and lack of attention to prose. Furthermore, these notes have been extracted from several texts including The Elements of Statistical Learning [@[@hastie01statisticallearning], Machine Learning[@mitchell1997machine] and Learning from Data [@Data2007]. To a degree the notes will follow the structure of the Stanford University Machine Learning Course on Coursera with elements from the aforementioned texts.
+That said, should someone find these notes of some marginal use, that would be a good thing!
+
+# Introduction
+What is machine learning?  Several definitions have emerged in literature over the decades; yet two definitions have impressed Stanley Ng enough to reference them in his machine learning course.
 
 > Machine Learning: Field of study that gives computers the ability to learn without being explicitly programmed. [@Samuel1959]
 
@@ -23,25 +40,48 @@ Another well-cited definition was posited by Tom Mitchell (1997)
 
 > Well-posed Learning Problem: A computer program is said to *learn* from experience E with respect to some task T and some performance measure P, if its performance on task T, as measured by P, improves with experience E. [@mitchell1997machine]
 
+Machine learning problems can be roughly categorized as either *supervised* or *unsupervised*. In the former, the goal is to predict the value of an outcome measure based upon a number of input measures.  In the latter, there is no outcome measure, and the goal is to describe the associations and patterns among a set of input measures. [@hastie01statisticallearning].  Examples of supervised learning algorithms are predicting, on the basis of demographic, diet and clinical data, whether a person hospitalized for a heart attack will experience a second one, or predicting a company's stock price based upon economic and company performance data.  Unsupervised learning enables postal machines to interpret and sort handwritten ZIP codes on envelopes or identifify the risk factors for prostate cancer based upon clinical and demographic variables.
+
+A more academic definition of *supervised learning* is as follows:
+
+>Supervised learning is the machine learning task of inferring a function from labeled training data.[1] The training data consist of a set of training examples. In supervised learning, each example is a pair consisting of an input object (typically a vector) and a desired output value (also called the supervisory signal). A supervised learning algorithm analyzes the training data and produces an inferred function, which can be used for mapping new examples. An optimal scenario will allow for the algorithm to correctly determine the class labels for unseen instances. This requires the learning algorithm to generalize from the training data to unseen situations in a "reasonable" way. [@wiki:supervisedlearning]
+
+An unsupervised learning...
+
+> Unsupervised learning studies how systems can learn to represent particular input patterns in a way that reflects the statistical structure of the overall collection of input patterns. By contrast with SUPERVISED LEARNING or REINFORCEMENT LEARNING, there are no explicit target outputs or environmental evaluations associated with each input; rather the unsupervised learner brings to bear prior biases as to what aspects of the structure of the input should be captured in the output. [@Dayan1999]
+
+## Terminology
+The prefered terminology (I've gathered) in statistical literature for inputs are *predictors* or the *independent variables*.  In pattern recognition and unsupervised problems, the term features is preferred and one refers to the outputs as responses or classically, the *dependent variables*. Qualitative variables, aka categorical or discrete variables or factors denote unordered and discrete and finite classes. Quantitative variables take on numeric values are ordered imperically as well as in nature. [@hastie01statisticallearning] 
+
+The distinction in output type has given rise to the naming convention for prediction tasks: *regression* for predicting *quantitative* outputs and *classification* for predicting *qualitative* outputs. A third type of variable, *ordered categorical* is representated as a single digit, or a bit value of 0 or 1 or -1 and 1. When there are more than two variables, *dummy variable encoding* is commonly used whereby K qualitative variables are represented by a vector of K binary variables where only one is switched on at a time.
+
+## Overview Supervised Learning 
+
+### Approaches to Prediction: Least Squares and Nearest Neighbors:
+Two simple but powerful prediction methods are linear fit by *least squares* and the *k-nearest-neighbor* prediction rule.  The linear model makes assumptions about the structure of the data and yields possibily inaccurate predictions.  The method of K-nearest neighhbors makes very wild structural assumptions, and predictions are often accurate but unstable. 
+
+### Linear Models and Least Squares
+Given a vector of inputs $X^{T} = (X_1, X_2, ..., X_p)$, we predict output Y via the model
+$$\hat{Y} = \hat{\theta_0} + \displaystyle\sum_{j=1}^{p} X_j\hat{\theta}_j$$
+The term $\hat{\theta_0}$ is the intercept, aka the *bias* in machine learning. Often a constant variable 1 is included in the variable X, $\hat{\theta_0}$ is included in the vector of coefficients $\hat{\theta}$, then we write the linear model in vecot form as an inner product.
+$$\hat{Y} = X^T \hat\theta,$$
+where $X^T$ denotes vector or matrix transpose and $\hat{Y}$ is a $K$ dimensional vector, in which case $\theta$ would be a $p x K$ matrix of coefficients. Viewed in $p-dimensional$ input space, $F(X) = X^TB$ is linear, and the gradient $F'(X) = \theta$ is the input space that points in hte steepest uphill direction.
+
+There are a number of different ways to fit the linear model, but the method of *least squares* is by far the most popular. In this approach, we pick the parameters $\theta$ that minimize the residual sum of squares
+$$RSS(\theta) = \displaystyle\sum_{j=1}^{m}(y_i - X^T_i\theta)^2$$. 
+$RSS(\theta)$ is a quadratic function of the parameters and hence its minimum always exists, but may not be unique. The solution in matrix notiation is:
+$$RSS(\theta) = (y - X\theta)^T (y = X\theta)$$,
+where X is an $m x n$ matrix with each row an input vector, and $y$ is an *m-dimensional* vector if the outputs in the training set. Differentiating w.r.t. $\theta$ we get the *normal equations*:
+$$X^T(y - X\theta) = 0$$
+If $X^TX$ is nonsingular, then the unique solution is given by:
+$$\hat{\theta} = (X^TX)^{-1}X^Ty.$$
+and the fitted value at the ith input $x_i$ is $\hat{y_i} = \hat{y}(x_i) = x_i^T\hat{\theta}$.  The fitted surface is characterized by the n parameters $\theta$.
+
+
 # Machine Learning Algorithms
 
 ## Supervised Learning 
 
->Supervised learning is the machine learning task of inferring a function from labeled training data.[1] The training data consist of a set of training examples. In supervised learning, each example is a pair consisting of an input object (typically a vector) and a desired output value (also called the supervisory signal). A supervised learning algorithm analyzes the training data and produces an inferred function, which can be used for mapping new examples. An optimal scenario will allow for the algorithm to correctly determine the class labels for unseen instances. This requires the learning algorithm to generalize from the training data to unseen situations in a "reasonable" way. [@wiki:supervisedlearning]
-
-## Unsupervised Learning
-
-> Unsupervised learning studies how systems can learn to represent particular input patterns in a way that reflects the statistical structure of the overall collection of input patterns. By contrast with SUPERVISED LEARNING or REINFORCEMENT LEARNING, there are no explicit target outputs or environmental evaluations associated with each input; rather the unsupervised learner brings to bear prior biases as to what aspects of the structure of the input should be captured in the output. [@Dayan1999]
-
-Cluster analysis is the most common unsupervised learning method used for exploratory data analysis to find hidden patterns or grouping in data. The clusters are modeled using a measure of similarity which is defined upon metrics such as Euclidean or probabilistic distance.
-
-Common clustering algorithms include[@matlab]:
-
-* Hierarchical clustering: builds a multilevel hierarchy of clusters by creating a cluster tree
-* k-Means clustering: partitions data into k distinct clusters based on distance to the centroid of a cluster
-* Gaussian mixture models: models clusters as a mixture of multivariate normal density components
-* Self-organizing maps: uses neural networks that learn the topology and distribution of the data
-* Hidden Markov models: uses observed data to recover the sequence of states
 
 # Supervised Learning
 

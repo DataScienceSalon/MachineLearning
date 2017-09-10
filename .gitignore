@@ -3,3 +3,5 @@
 .RData
 .Ruserdata
 inst/doc
+vignettes/Health.bib
+vignettes/NLP.bib
